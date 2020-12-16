@@ -120,7 +120,7 @@ void app_main(void)
 
 */
   while(1){
-    printf("Free memory: %d bytes\n", system_get_free_heap_size());
+    printf("Free memory: %d bytes\n", esp_get_free_heap_size());
     vTaskDelay(1000 / portTICK_PERIOD_MS);
   };
 

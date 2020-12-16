@@ -301,7 +301,7 @@ void perform_analog_motion_sub_block(analog_motion_ctx_t *motion_ctx, unsigned i
 
 static void run_i2s_analog(){
   analog_motion_ctx_t motion_ctx;
-  memset(&motion_ctx, 0, sizeof(motion_ctx_t));
+  memset(&motion_ctx, 0, sizeof(analog_motion_ctx_t));
 
   while(1){
     xTaskNotifyWait( 0x00, ULONG_MAX, &motion_ctx.block, portMAX_DELAY ); 
