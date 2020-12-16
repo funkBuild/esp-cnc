@@ -1,0 +1,54 @@
+.file-controls {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 40px;
+  height: 100%;
+  transition: all 200ms ease 0s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  z-index: -1;
+}
+
+.file-controls.active {
+  right: -40px;
+}
+
+.file-controls .inner-container {
+  color: #eee;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #222;
+  height: 70%;
+  border-radius: 0 10px 10px 0;
+}
+
+.file-controls .inner-container div {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.file-controls .inner-container svg {
+  height: 18px;
+}
+
+.file-controls .inner-container div a {
+  text-decoration: none;
+  color: #eee;
+}
+
+.file-controls .inner-container div:hover svg {
+  color: #5e6bdc;
+}
+
+.file-controls .inner-container div:hover:last-child  svg{
+  color: #e1262f;
+}

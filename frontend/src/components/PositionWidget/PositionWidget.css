@@ -1,0 +1,53 @@
+.axis {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #ccc;
+  height: 50px;
+}
+
+.axis .axisLabel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 11px;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.axis .axisLabel span:first-child {
+  font-size: 20px;
+}
+
+.axis .axisPosition {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 20px;
+  flex-grow: 1;
+}
+
+.axis .axisPosition span:first-child {
+  font-size: 18px;
+}
+
+.axis .axisButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  padding: 0 5px;
+}
+
+.axis .axisButtons div {
+  opacity: 0.5;
+  transition: all 0.5s ease;
+  height: 15px;
+  cursor: pointer;
+}
+
+.axis .axisButtons div:hover {
+  opacity: 1;
+
+}

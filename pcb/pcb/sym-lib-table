@@ -1,3 +1,4 @@
 (sym_lib_table
   (lib (name custom)(type Legacy)(uri /home/matt/Desktop/source/esp-cnc/pcb/pcb/custom.lib)(options "")(descr ""))
+  (lib (name pcb-rescue)(type Legacy)(uri ${KIPRJMOD}/pcb-rescue.lib)(options "")(descr ""))
 )

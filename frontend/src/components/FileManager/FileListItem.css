@@ -1,0 +1,30 @@
+.FileListItem {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.FileListItem:hover {
+  cursor: pointer;
+  background-color: #ebf1fc;
+}
+.FileListItem.selected {
+  background-color: #e0e0e0;
+}
+
+.FileListItem span:first-child {
+  padding-right: 5px;
+}
+
+.FileListItem span:first-child svg {
+  height: 17px;
+  width: 17px;
+}
+
+.FileListItem span:nth-child(2) {
+  flex-grow: 1;
+  max-width: 200px;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,10 @@
+.GcodeLineList {
+  font-family: "Courier New", Courier, monospace;
+  background-color: #fff;
+  color: #ccc;
+  max-height: 600px;
+  max-width: 400px;
+  box-sizing: border-box;
+  overflow-y: scroll;
+
+}

@@ -1,9 +1,12 @@
 #pragma once
 
-#define N_AXIS 9
+#include <stdbool.h>
+
+#define N_AXIS 3
 #define N_SPINDLES 1
 
 typedef enum Axis {
+  INVALID_AXIS = -1,
   X_AXIS = 0,
   Y_AXIS = 1,
   Z_AXIS = 2,
@@ -16,11 +19,13 @@ typedef enum Axis {
 } Axis;
 
 typedef struct axis_config_t {
-  float acceleration_limit[N_AXIS];
-  float velocity_limit[N_AXIS];
+  char* identifier;
+  bool enabled;
+  float acceleration_limit;
+  float velocity_limit;
 
-  float (*position_callback[N_AXIS])(void *);
-  void* position_callback_ctx[N_AXIS];
+  float (*position_callback)(void *);
+  void* position_callback_ctx;
 } axis_config_t;
 
 
@@ -28,7 +33,7 @@ typedef struct axis_state_t {
   float position[N_AXIS];
 } axis_state_t;
 
-extern axis_config_t axis_config;
+extern axis_config_t axis_config[N_AXIS];
 extern axis_state_t axis_state;
 
 void global_init();

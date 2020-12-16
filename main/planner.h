@@ -40,11 +40,13 @@ typedef struct plan_block_t {
 
   bool planned;
   bool running;
+
+  unsigned int line_number;
 } plan_block_t;
 
 extern plan_block_t *queue_head;
 
-void add_motion_block(float* distance, float programmed_rate);
+void add_motion_block(float* distance, float programmed_rate, unsigned int line_number);
 void reverse_plan();
 void forward_plan();
 void print_plan();

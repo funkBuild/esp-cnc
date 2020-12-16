@@ -1,0 +1,27 @@
+.progressContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 50px 0;
+}
+
+.progressContainer > span {
+    flex: 1;
+
+}
+
+.progressBar {
+    width: 150px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    height: 5px;
+    margin: 5px 0;
+}
+  
+.progressBar span {
+    display: inline-block;
+    background-color: #222;
+    height: 100%;
+}
+

@@ -6,6 +6,17 @@
 #include <stdio.h>
 
 static spindle_context_t spindles[N_SPINDLES];
+spindle_config_t spindle_config[N_SPINDLES] = {
+  {
+    .output_type = PWM,
+    .analog_channel_idx = 0,
+    .enabled = true,
+    .dynamic_power = true,
+    .frequency = 1000,
+    .max_speed = 5000,
+    .speed = 4000
+  }
+};
 
 static inline void clear_spindle_bit(int spindle_num){
   //set_i2s_bit(2 * (10+spindle_num));
@@ -16,7 +27,7 @@ static inline void set_spindle_bit(int spindle_num){
 }
 
 void spindle_set_dynamic_power(spindle_context_t* spindle_ctx, float power_percentage){
-  spindle_ctx->threshold = (power_percentage * spindle_ctx->max_count * spindle_ctx->speed) / spindle_ctx->max_speed;
+  spindle_ctx->threshold = (power_percentage * spindle_ctx->max_count * spindle_config[spindle_ctx->idx].speed) / spindle_config[spindle_ctx->idx].max_speed;
 }
 
 void spindle_calc_dynamic_power(spindle_context_t* spindle_ctx, motion_ctx_t *motion_ctx, MotionEvent event){
@@ -46,7 +57,7 @@ static void spindle_motion_update(motion_ctx_t *motion_ctx, motion_action_t *sel
     set_spindle_bit(spindle_ctx->idx);
   }
 
-  if(spindle_ctx->dynamic_power){
+  if(spindle_config[spindle_ctx->idx].dynamic_power){
     spindle_calc_dynamic_power(spindle_ctx, motion_ctx, event);
   }
 
@@ -61,7 +72,7 @@ static void spindle_motion_done(motion_ctx_t *motion_ctx, motion_action_t *self,
 static void spindle_motion_start(motion_ctx_t *motion_ctx, motion_action_t *self, MotionEvent event){
   spindle_context_t* spindle_ctx = (spindle_context_t*) self->ctx;
 
-  if(spindle_ctx->dynamic_power){
+  if(spindle_config[spindle_ctx->idx].dynamic_power){
     switch(event){
       case Accelerate: {
         spindle_ctx->segment_power_start = motion_ctx->block->entry_speed / motion_ctx->block->programmed_rate;
@@ -93,7 +104,7 @@ static void spindle_motion_start(motion_ctx_t *motion_ctx, motion_action_t *self
 
 void spindle_motion_setup(motion_ctx_t *motion_ctx){
   for(int i=0; i < N_SPINDLES; i++){
-    if(!spindles[i].enabled || spindles[i].output_type != PWM) continue;
+    if(!spindle_config[i].enabled || spindle_config[i].output_type != PWM) continue;
 
     motion_action_t* action = motion_ctx_create_action(motion_ctx);
 
@@ -111,9 +122,9 @@ void spindle_motion_setup(motion_ctx_t *motion_ctx){
 static void spindle_motion_analog_start(analog_motion_ctx_t *motion_ctx, motion_action_t *self, MotionEvent event){
   spindle_context_t* spindle_ctx = (spindle_context_t*) self->ctx;
 
-  const float max_spindle_power = (float)spindle_ctx->speed / spindle_ctx->max_speed;
+  const float max_spindle_power = (float)spindle_config[spindle_ctx->idx].speed / spindle_config[spindle_ctx->idx].max_speed;
 
-  if(spindle_ctx->dynamic_power){
+  if(spindle_config[spindle_ctx->idx].dynamic_power){
     switch(event){
       case Accelerate: {
         spindle_ctx->segment_power_start = max_spindle_power * (motion_ctx->block->entry_speed / motion_ctx->block->programmed_rate);
@@ -136,22 +147,23 @@ static void spindle_motion_analog_done(analog_motion_ctx_t *motion_ctx, motion_a
 
 static void spindle_motion_analog_update(analog_motion_ctx_t *motion_ctx, motion_action_t *self, MotionEvent event){
   spindle_context_t* spindle_ctx = (spindle_context_t*) self->ctx;
-  float cruise_power = (float)spindle_ctx->speed / spindle_ctx->max_speed;
+  const float cruise_power = (float)spindle_config[spindle_ctx->idx].speed / spindle_config[spindle_ctx->idx].max_speed;
+  const unsigned int analog_channel_idx = spindle_config[spindle_ctx->idx].analog_channel_idx;
 
-  if(event == Cruise || !spindle_ctx->dynamic_power){
-    motion_ctx->channel_value[spindle_ctx->analog_channel_idx] = cruise_power;
+  if(event == Cruise || !spindle_config[spindle_ctx->idx].dynamic_power){
+    motion_ctx->channel_value[analog_channel_idx] = cruise_power;
     return;
   }
 
   float progress = (float)motion_ctx->ticks / (event == Accelerate ? motion_ctx->accel_ticks : motion_ctx->decel_ticks);
   float current_power = spindle_ctx->segment_power_start + progress * spindle_ctx->segment_power_delta;
 
-  motion_ctx->channel_value[spindle_ctx->analog_channel_idx] = current_power;
+  motion_ctx->channel_value[analog_channel_idx] = current_power;
 }
 
 void spindle_analog_setup(analog_motion_ctx_t *motion_ctx){
   for(int i=0; i < N_SPINDLES; i++){
-    if(!spindles[i].enabled || spindles[i].output_type != Analog) continue;
+    if(!spindle_config[i].enabled || spindle_config[i].output_type != Analog) continue;
     
     motion_action_t* action = analog_motion_ctx_create_action(motion_ctx);
     action->ctx = (void*) &spindles[i];
@@ -162,42 +174,19 @@ void spindle_analog_setup(analog_motion_ctx_t *motion_ctx){
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void spindle_set_speed(unsigned int idx, unsigned int speed){
   if(idx >= N_SPINDLES) return;
 
-  spindles[idx].speed = speed > spindles[idx].max_speed ? speed : spindles[idx].max_speed;
-  spindles[idx].threshold = (spindles[idx].max_count * spindles[idx].speed) / spindles[idx].max_speed;
+  spindle_config[idx].speed = speed > spindle_config[idx].max_speed ? speed : spindle_config[idx].max_speed;
+  spindles[idx].threshold = (spindles[idx].max_count * spindle_config[idx].speed) / spindle_config[idx].max_speed;
 }
 
 void spindle_init(){
   // Spindle defaults
   for(int i=0; i < N_SPINDLES; i++){
-    spindles[i].output_type = PWM;
-    spindles[i].idx = i;
-    spindles[i].analog_channel_idx = i;
-    spindles[i].enabled = true;
-    spindles[i].dynamic_power = true;
-    spindles[i].frequency = 1000;
-    spindles[i].max_speed = 5000;
-    spindles[i].speed = 4000;
-    spindles[i].max_count = STEPPER_I2S_SAMPLE_RATE / spindles[i].frequency;
+
+    spindles[i].max_count = STEPPER_I2S_SAMPLE_RATE / spindle_config[i].frequency;
     spindles[i].count = 0;
-    spindles[i].threshold = (spindles[i].max_count * spindles[i].speed) / spindles[i].max_speed;
+    spindles[i].threshold = (spindles[i].max_count * spindle_config[i].speed) / spindle_config[i].max_speed;
   }
 };

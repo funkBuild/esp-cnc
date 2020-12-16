@@ -1,0 +1,93 @@
+.FileList {
+  position: relative;
+  height: 600px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.FileList .loading, .FileList .progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+  background: rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.FileList .loading img {
+  height: 50px;
+  width: 50px;
+}
+
+.list-container {
+  box-sizing: border-box;
+  overflow-y: scroll;
+  height: 100%;
+  padding: 5px;
+}
+
+.FileMenu {
+  box-sizing: border-box;
+  width: 100%;
+  height: 33px;
+  border-top: 1px solid #ccc;
+  background: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.actions div {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  color: #999;
+  cursor: pointer;
+}
+
+.actions div:hover {
+  color: #222;
+}
+
+.actions div svg {
+  height: 20px;
+}
+
+.free-space {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.free-space span:first-child {
+  font-size: 11px;
+}
+
+.free-space .free-space-graph {
+  width: 100%;
+  height: 5px;
+  border: 1px solid #222;
+  padding: 0;
+}
+
+.free-space .free-space-graph div {
+  display: inline-block;
+  height: 5px;
+  background-color: #222;
+}

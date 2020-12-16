@@ -1,0 +1,25 @@
+.GcodeActions {
+  margin: 5px;
+  border: 1px #888 solid;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.GcodeActions > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+.GcodeActions > span:hover {
+  background-color: #eee;
+  cursor: pointer;
+}
+
+.GcodeActions > span > svg {
+  height: 20px;
+  color: #555;
+}

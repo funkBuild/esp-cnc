@@ -10,11 +10,8 @@ typedef struct motion_ctx_t motion_ctx_t;
 
 typedef struct stepper_context_t {
   unsigned int idx;
-  Axis axis;
-  bool enabled;
-  bool direction;
-  float steps_per_mm;
 
+  bool direction;
   unsigned int t_next;
   unsigned int steps;
 
@@ -27,6 +24,14 @@ typedef struct stepper_context_t {
   float step_distance;
   float acceleration;
 } stepper_context_t;
+
+typedef struct stepper_config_t {
+  Axis axis;
+  bool enabled; //TODO: Implement
+  float steps_per_mm;
+} stepper_config_t;
+
+extern stepper_config_t stepper_config[N_STEPPERS];
 
 void stepper_motion_update(motion_ctx_t *motion_ctx, motion_action_t *self, MotionEvent event);
 void stepper_motion_start(motion_ctx_t *motion_ctx, motion_action_t *self, MotionEvent event);

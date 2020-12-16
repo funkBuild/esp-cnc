@@ -84,9 +84,9 @@ float limit_and_scale_by_axis_maximum(float *values, float *limits, float *unit_
   return limit_value;
 }
 
-void add_motion_block(float* distance, float programmed_rate)
+void add_motion_block(float* distance, float programmed_rate, unsigned int line_number)
 {
-  while(queue_size > 500){
+  while(queue_size > 100){
     vTaskDelay(10 / portTICK_PERIOD_MS);
   };
 
@@ -95,6 +95,7 @@ void add_motion_block(float* distance, float programmed_rate)
   new_block->planned = false;
   new_block->running = false;
   new_block->next = NULL;
+  new_block->line_number = line_number;
 
   for(int i=0; i < N_AXIS; i++){
     new_block->axis_distance[i] = distance[i];
@@ -103,18 +104,30 @@ void add_motion_block(float* distance, float programmed_rate)
 
   calc_unit_vec(new_block);
 
-  new_block->rapid_rate = limit_and_scale_by_axis_maximum(new_block->axis_velocity, axis_config.velocity_limit, new_block->unit_vec);
-  new_block->acceleration = limit_and_scale_by_axis_maximum(new_block->axis_acceleration, axis_config.acceleration_limit, new_block->unit_vec);
-  new_block->programmed_rate = fmin(programmed_rate, new_block->rapid_rate);   // TODO: Review this, seems weird
+  float limits[N_AXIS];
+  for(int i=0; i < N_AXIS; i++)
+    limits[i] = axis_config[i].velocity_limit;
+
+  new_block->rapid_rate = limit_and_scale_by_axis_maximum(new_block->axis_velocity, limits, new_block->unit_vec);
+
+  for(int i=0; i < N_AXIS; i++)
+    limits[i] = axis_config[i].acceleration_limit;
+
+  new_block->acceleration = limit_and_scale_by_axis_maximum(new_block->axis_acceleration, limits, new_block->unit_vec);
+  new_block->programmed_rate = fmin(programmed_rate, new_block->rapid_rate);
   new_block->max_feedrate = new_block->programmed_rate;
+
+  //printf("programmed_rate=%f\n", new_block->programmed_rate);
 
   xSemaphoreTake(queue_mutex, portMAX_DELAY);
 
   if(queue_head == NULL){
+    //printf("Add to head\n");
     new_block->prev = NULL;
  
     queue_head = new_block;
   } else {
+    //printf("Add to tail\n");
     plan_block_t *current = queue_head;
 
     while(current->next != NULL){
@@ -128,10 +141,10 @@ void add_motion_block(float* distance, float programmed_rate)
   queue_size++;
 
   reverse_plan();
-
+  forward_plan_all();
+//print_plan();
   xSemaphoreGive(queue_mutex);
 
-  forward_plan_all();
   motion_wakeup();
 }
 
@@ -161,7 +174,11 @@ void calc_junction_speed(plan_block_t *current, plan_block_t *prev){
     } else {
       convert_delta_vector_to_unit_vector(junction_unit_vec);
 
-      float junction_acceleration = limit_value_by_axis_maximum(axis_config.acceleration_limit, junction_unit_vec);
+      float limits[N_AXIS];
+      for(int i=0; i < N_AXIS; i++)
+        limits[i] = axis_config[i].acceleration_limit;
+
+      float junction_acceleration = limit_value_by_axis_maximum(limits, junction_unit_vec);
       float sin_theta_d2 = sqrt(0.5*(1.0-junction_cos_theta)); // Trig half angle identity. Always positive.
 
       current->max_junction_speed = fmax(
@@ -201,8 +218,8 @@ void reverse_plan(){
 
     current->max_entry_speed = fmin(
       current->programmed_rate,
-      current->exit_speed + sqrt(2 * current->distance * current->acceleration)
-    );
+      sqrt(2 * current->distance * current->acceleration + current->exit_speed * current->exit_speed)
+    );                                                                                                                                                                                                                                                                                     
 
     calc_junction_speed(current, current->prev);
     n++;
@@ -228,6 +245,10 @@ void forward_plan_single(float current_velocity, plan_block_t *current){
 
     // used for laser dynamic power calc
     current->max_feedrate = current_velocity;
+
+    //printf("---- decel only\ndecel_delta_v=%f, acceleration=%f, exit_speed=%f\n", decel_delta_v, current->acceleration, current->exit_speed);
+
+    //printf("decel_delta_v=%f, decel_distance=%f, cruise_distance=%f, distance=%f\n", decel_delta_v, decel_distance, current->distance - accel_distance - decel_distance, current->distance);
   } else {
     accel_delta_v = current->programmed_rate - current_velocity;
     accel_distance = pow(accel_delta_v, 2) / (2* current->acceleration) + current_velocity * (accel_delta_v / current->acceleration);
@@ -238,8 +259,15 @@ void forward_plan_single(float current_velocity, plan_block_t *current){
 
     if(accel_distance + decel_distance > current->distance){
       // We can't reach the programmed velocity so the cruise time is zero and we need to re-caluclate
+      //printf("\n-------#####------\n");
+      //printf("current->distance =%f, acceleration=%f, exit_speed=%f, current_velocity=%f\n", current->distance , current->acceleration, current->exit_speed, current_velocity);
+      //printf("prior accel_distance=%f\n", accel_distance);
 
-      float v_max_sqr = current->distance * current->acceleration + pow(current->exit_speed, 2) / 2 + pow(current_velocity, 2) / 2;
+
+      // TODO: This clamps the exit speed to the maximum allowable based on accellerating from the entry speed. Seems like a hack for an upstream issue.
+      float max_exit_speed = fmin(current->exit_speed, sqrt(2 * current->distance * current->acceleration + current_velocity * current_velocity));
+
+      float v_max_sqr = current->distance * current->acceleration + (pow(max_exit_speed, 2) + pow(current_velocity, 2)) / 2;
       float v_max = sqrt(v_max_sqr);
 
       // used for laser dynamic power calc
@@ -248,8 +276,13 @@ void forward_plan_single(float current_velocity, plan_block_t *current){
       accel_delta_v = v_max - current_velocity;
       accel_distance = pow(accel_delta_v, 2) / (2* current->acceleration) + current_velocity * (accel_delta_v / current->acceleration);
 
-      decel_delta_v = v_max - current->exit_speed;
-      decel_distance = pow(decel_delta_v, 2) / (2* current->acceleration) + current->exit_speed * (decel_delta_v / current->acceleration);
+      decel_delta_v = v_max - max_exit_speed;
+      decel_distance = pow(decel_delta_v, 2) / (2* current->acceleration) + max_exit_speed * (decel_delta_v / current->acceleration);
+
+
+      //printf("accel_delta_v=%f, accel_distance=%f\n", accel_delta_v, accel_distance);
+      //printf("decel_delta_v=%f, decel_distance=%f\n", decel_delta_v, decel_distance);
+      //printf("\n-----------------\n");
     }
   }
 
@@ -281,6 +314,7 @@ void print_plan(){
   while(current != NULL){
     printf("--------------\n");
     printf("entry_speed=%f\n", current->entry_speed);
+    printf("exit_speed=%f\n", current->exit_speed);
     printf("max_junction_speed=%f\n", current->max_junction_speed);
     printf("max_entry_speed=%f\n", current->max_entry_speed);
     printf("distance=%f\n", current->distance);
@@ -310,6 +344,7 @@ plan_block_t* lock_and_pop_motion_queue(){
     current_velocity = queue_head->exit_speed;
 
     free(queue_head);
+
     queue_size--;
 
     queue_head = next;

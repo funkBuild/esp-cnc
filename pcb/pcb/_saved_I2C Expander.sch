@@ -1,0 +1,169 @@
+EESchema Schematic File Version 4
+LIBS:pcb-cache
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 4
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L custom:SX1509B U?
+U 1 1 5CAEB073
+P 4500 2050
+F 0 "U?" H 4475 2765 50  0000 C CNN
+F 1 "SX1509B" H 4475 2674 50  0000 C CNN
+F 2 "Package_DFN_QFN:QFN-28-1EP_4x4mm_P0.4mm_EP2.4x2.4mm" H 4500 2050 50  0001 C CNN
+F 3 "" H 4500 2050 50  0001 C CNN
+	1    4500 2050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5CAEB0D9
+P 3450 2600
+F 0 "#PWR?" H 3450 2450 50  0001 C CNN
+F 1 "+3.3V" H 3465 2773 50  0000 C CNN
+F 2 "" H 3450 2600 50  0001 C CNN
+F 3 "" H 3450 2600 50  0001 C CNN
+	1    3450 2600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5CAEB1B5
+P 3650 3200
+F 0 "#PWR?" H 3650 2950 50  0001 C CNN
+F 1 "GND" H 3655 3027 50  0000 C CNN
+F 2 "" H 3650 3200 50  0001 C CNN
+F 3 "" H 3650 3200 50  0001 C CNN
+	1    3650 3200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3850 2900 3650 2900
+Wire Wire Line
+	3650 2900 3650 3000
+Wire Wire Line
+	3850 3000 3650 3000
+Connection ~ 3650 3000
+Wire Wire Line
+	3650 3000 3650 3200
+Wire Wire Line
+	3850 2600 3750 2600
+Wire Wire Line
+	3850 2700 3750 2700
+Wire Wire Line
+	3750 2700 3750 2600
+Connection ~ 3750 2600
+Wire Wire Line
+	3750 2600 3450 2600
+Wire Wire Line
+	3850 2800 3750 2800
+Wire Wire Line
+	3750 2800 3750 2700
+Connection ~ 3750 2700
+$Comp
+L power:GND #PWR?
+U 1 1 5CAEB26A
+P 3700 1750
+F 0 "#PWR?" H 3700 1500 50  0001 C CNN
+F 1 "GND" H 3705 1577 50  0000 C CNN
+F 2 "" H 3700 1750 50  0001 C CNN
+F 3 "" H 3700 1750 50  0001 C CNN
+	1    3700 1750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3850 1650 3700 1650
+Wire Wire Line
+	3700 1650 3700 1750
+Wire Wire Line
+	3850 1750 3700 1750
+Connection ~ 3700 1750
+Text HLabel 3300 2000 0    50   Input ~ 0
+SDA
+Text HLabel 3300 2100 0    50   Input ~ 0
+SCL
+Text HLabel 3300 2200 0    50   Input ~ 0
+INT
+Text HLabel 3300 2300 0    50   Input ~ 0
+RESET
+Wire Wire Line
+	3300 2000 3850 2000
+Wire Wire Line
+	3850 2100 3300 2100
+Wire Wire Line
+	3300 2200 3600 2200
+Wire Wire Line
+	3600 2200 3600 2300
+Wire Wire Line
+	3600 2300 3850 2300
+Wire Wire Line
+	3850 2400 3500 2400
+Wire Wire Line
+	3500 2400 3500 2300
+Wire Wire Line
+	3500 2300 3300 2300
+$Comp
+L Connector:Conn_01x08_Male J?
+U 1 1 5CAEB994
+P 5650 1950
+F 0 "J?" H 5623 1923 50  0000 R CNN
+F 1 "Conn_01x08_Male" H 5623 1832 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 5650 1950 50  0001 C CNN
+F 3 "~" H 5650 1950 50  0001 C CNN
+	1    5650 1950
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x08_Male J?
+U 1 1 5CAEBA2E
+P 5650 2750
+F 0 "J?" H 5623 2723 50  0000 R CNN
+F 1 "Conn_01x08_Male" H 5623 2632 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 5650 2750 50  0001 C CNN
+F 3 "~" H 5650 2750 50  0001 C CNN
+	1    5650 2750
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	5450 1650 5100 1650
+Wire Wire Line
+	5100 1750 5450 1750
+Wire Wire Line
+	5450 1850 5100 1850
+Wire Wire Line
+	5100 1950 5450 1950
+Wire Wire Line
+	5450 2050 5100 2050
+Wire Wire Line
+	5100 2150 5450 2150
+Wire Wire Line
+	5450 2250 5100 2250
+Wire Wire Line
+	5100 2350 5450 2350
+Wire Wire Line
+	5450 2450 5100 2450
+Wire Wire Line
+	5100 2550 5450 2550
+Wire Wire Line
+	5450 2650 5100 2650
+Wire Wire Line
+	5100 2750 5450 2750
+Wire Wire Line
+	5450 2850 5100 2850
+Wire Wire Line
+	5100 2950 5450 2950
+Wire Wire Line
+	5450 3050 5100 3050
+Wire Wire Line
+	5100 3150 5450 3150
+$EndSCHEMATC

@@ -1,6 +1,6 @@
 EESchema Schematic File Version 4
 LIBS:pcb-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -15,9 +15,11 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L 74xx:74HC595 U?
+L pcb-rescue:74HC595-74xx U?
 U 1 1 5CAC3687
 P 1700 4700
+AR Path="/5CAC3687" Ref="U?"  Part="1" 
+AR Path="/5CAC35BA/5CAC3687" Ref="U?"  Part="1" 
 F 0 "U?" H 1300 5450 50  0000 C CNN
 F 1 "74HC595" H 1400 5350 50  0000 C CNN
 F 2 "" H 1700 4700 50  0001 C CNN
@@ -38,9 +40,11 @@ Wire Wire Line
 Wire Wire Line
 	1300 4800 1100 4800
 $Comp
-L 74xx:74HC595 U?
+L pcb-rescue:74HC595-74xx U?
 U 1 1 5CAC376A
 P 3450 4700
+AR Path="/5CAC376A" Ref="U?"  Part="1" 
+AR Path="/5CAC35BA/5CAC376A" Ref="U?"  Part="1" 
 F 0 "U?" H 3050 5450 50  0000 C CNN
 F 1 "74HC595" H 3150 5350 50  0000 C CNN
 F 2 "" H 3450 4700 50  0001 C CNN
@@ -49,9 +53,11 @@ F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 3450 4700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC595 U?
+L pcb-rescue:74HC595-74xx U?
 U 1 1 5CAC3794
 P 5300 4700
+AR Path="/5CAC3794" Ref="U?"  Part="1" 
+AR Path="/5CAC35BA/5CAC3794" Ref="U?"  Part="1" 
 F 0 "U?" H 4900 5450 50  0000 C CNN
 F 1 "74HC595" H 5000 5350 50  0000 C CNN
 F 2 "" H 5300 4700 50  0001 C CNN
@@ -60,9 +66,11 @@ F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 5300 4700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC595 U?
+L pcb-rescue:74HC595-74xx U?
 U 1 1 5CAC37E2
 P 7200 4700
+AR Path="/5CAC37E2" Ref="U?"  Part="1" 
+AR Path="/5CAC35BA/5CAC37E2" Ref="U?"  Part="1" 
 F 0 "U?" H 6800 5450 50  0000 C CNN
 F 1 "74HC595" H 6900 5350 50  0000 C CNN
 F 2 "" H 7200 4700 50  0001 C CNN

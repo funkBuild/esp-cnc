@@ -4,6 +4,7 @@
 #include "stepper.h"
 #include "spindle.h"
 #include "galvanometer.h"
+#include "api/ws_api.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -96,7 +97,7 @@ void set_i2s_bit(int offset){
 
 void motion_ctx_free_actions(motion_ctx_t *motion_ctx){
   for(int i=0; i < MAX_ACTIONS; i++){
-    if(motion_ctx->actions[i] == NULL) return;
+    if(motion_ctx->actions[i] == NULL) continue;
 
     free(motion_ctx->actions[i]);
     motion_ctx->actions[i] = NULL;
@@ -159,18 +160,19 @@ void perform_motion_sub_block(motion_ctx_t *motion_ctx, unsigned int block_ticks
 }
 
 static void run_i2s_digital(){
+  unsigned int notif_val = 0;
   motion_ctx_t motion_ctx;
-  memset(&motion_ctx, 0, sizeof(motion_ctx_t)); // everything is null
-
-  print_plan();
+  memset(&motion_ctx, 0, sizeof(motion_ctx_t));
 
   while((motion_ctx.block = lock_and_pop_motion_queue())){
+    //TODO: Move this outside the motion loop, probably send and event somewhere
+    ws_api_send_job_line_number(motion_ctx.block->line_number);
+
     // wake the analog task and give it the motion block to execute
     xTaskNotify( analog_motion_task_handle, motion_ctx.block, eSetValueWithoutOverwrite );
 
-    // TODO: initialize these outside the while loop to increase blocks per sec. Stepper setup needs re-jiggering
     stepper_motion_setup(&motion_ctx);
-    spindle_motion_setup(&motion_ctx); 
+    spindle_motion_setup(&motion_ctx);
 
     motion_ctx.accel_ticks = round( motion_ctx.block->accel_time * STEPPER_I2S_SAMPLE_RATE );
     motion_ctx.cruise_ticks = round( motion_ctx.block->cruise_time * STEPPER_I2S_SAMPLE_RATE );
@@ -180,7 +182,11 @@ static void run_i2s_digital(){
     perform_motion_sub_block(&motion_ctx, motion_ctx.cruise_ticks, Cruise);
     perform_motion_sub_block(&motion_ctx, motion_ctx.decel_ticks, Decelerate);
 
-    xTaskNotifyWait( 0x00, ULONG_MAX, NULL, portMAX_DELAY ); 
+
+    while(notif_val == 0){
+      xTaskNotifyWait( 0x00, ULONG_MAX, &notif_val, portMAX_DELAY );
+    }
+
     release_position_callbacks();
     motion_ctx_free_actions(&motion_ctx);
   }
@@ -190,13 +196,11 @@ static void run_i2s_digital(){
   flush_i2s(STEPPER_I2S_NUM);
   xTaskNotify( analog_motion_task_handle, NULL, eSetValueWithoutOverwrite );
 
-
-  {
-    char tmp[100];
-    vTaskGetRunTimeStats( tmp );
-    printf("%s\n", tmp);
-  }
-
+//  {
+//    char tmp[100];
+//    vTaskGetRunTimeStats( tmp );
+//    printf("%s\n", tmp);
+//  }
 };
 
 
@@ -227,8 +231,6 @@ static void digital_motion_task( void * pvParameters )
   i2s_set_pin(STEPPER_I2S_NUM, &pin_config);
 
   while(true){
-    run_i2s_digital();
-
 /*
     printf("Motion task sleep\n");
     vTaskSuspend( motion_task_handle );
@@ -236,14 +238,18 @@ static void digital_motion_task( void * pvParameters )
 */
 
     //TODO: convert this to an idle event loop
-    while(is_motion_queue_empty())
+    while(is_motion_queue_empty()){
+//      vTaskDelay(1000 / portTICK_PERIOD_MS);
       forward_i2s_ticks(STEPPER_I2S_NUM, 1024, 0);
+    }
+    printf("motion run\n");
+    run_i2s_digital();
   };
 }
 
 void analog_motion_ctx_free_actions(analog_motion_ctx_t *motion_ctx){
   for(int i=0; i < MAX_ANALOG_ACTIONS; i++){
-    if(motion_ctx->actions[i] == NULL) return;
+    if(motion_ctx->actions[i] == NULL) continue;
 
     free(motion_ctx->actions[i]);
     motion_ctx->actions[i] = NULL;
@@ -254,7 +260,7 @@ motion_action_t* analog_motion_ctx_create_action(analog_motion_ctx_t *motion_ctx
   for(int i=0; i < MAX_ANALOG_ACTIONS; i++){
     if(motion_ctx->actions[i] == NULL){
       motion_ctx->actions[i] = malloc(sizeof(motion_action_t));
-
+      
       return motion_ctx->actions[i];
     };
   }
@@ -295,7 +301,7 @@ void perform_analog_motion_sub_block(analog_motion_ctx_t *motion_ctx, unsigned i
 
 static void run_i2s_analog(){
   analog_motion_ctx_t motion_ctx;
-  memset(&motion_ctx, 0, sizeof(motion_ctx_t)); // everything is null
+  memset(&motion_ctx, 0, sizeof(motion_ctx_t));
 
   while(1){
     xTaskNotifyWait( 0x00, ULONG_MAX, &motion_ctx.block, portMAX_DELAY ); 
@@ -311,8 +317,6 @@ static void run_i2s_analog(){
       spindle_analog_setup(&motion_ctx);
       galvanometer_analog_setup(&motion_ctx);
 
-      printf("action[0]=%u\n", (unsigned int) motion_ctx.actions[0]);
-
       motion_ctx.accel_ticks = round( motion_ctx.block->accel_time * ANALOG_I2S_SAMPLE_RATE );
       motion_ctx.cruise_ticks = round( motion_ctx.block->cruise_time * ANALOG_I2S_SAMPLE_RATE );
       motion_ctx.decel_ticks = round( motion_ctx.block->decel_time * ANALOG_I2S_SAMPLE_RATE );
@@ -321,12 +325,9 @@ static void run_i2s_analog(){
       perform_analog_motion_sub_block(&motion_ctx, motion_ctx.cruise_ticks, Cruise);
       perform_analog_motion_sub_block(&motion_ctx, motion_ctx.decel_ticks, Decelerate);
 
-      //printf("analog motion done\n");
-      printf("action[0]=%u\n", (unsigned int) motion_ctx.actions[0]);
-
       analog_motion_ctx_free_actions(&motion_ctx);
 
-      xTaskNotify( digital_motion_task_handle, NULL, eSetValueWithoutOverwrite );
+      xTaskNotify( digital_motion_task_handle, 0x1234, eSetValueWithOverwrite );
     }
   }
 };
@@ -362,12 +363,10 @@ static void analog_motion_task( void * pvParameters )
 
 void motion_init(){
   // TODO: zero i2s  buffer
-  stepper_init();
   spindle_init();
-  galvanometer_init();
 
-  xTaskCreate( digital_motion_task, "digital_motion_task", 8192, NULL, 9, &digital_motion_task_handle );
-  xTaskCreate( analog_motion_task, "analog_motion_task", 8192, NULL, 9, &analog_motion_task_handle );
+  xTaskCreate( digital_motion_task, "digital_motion_task", 4096, NULL, tskIDLE_PRIORITY, &digital_motion_task_handle );
+  xTaskCreate( analog_motion_task, "analog_motion_task", 4096, NULL, tskIDLE_PRIORITY, &analog_motion_task_handle );
 }
 
 void motion_wakeup(){

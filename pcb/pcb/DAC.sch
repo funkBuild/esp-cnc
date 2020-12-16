@@ -1,6 +1,6 @@
 EESchema Schematic File Version 4
 LIBS:pcb-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -65,7 +65,7 @@ Wire Wire Line
 Wire Wire Line
 	4000 3400 3850 3400
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0C696
 P 3400 3400
 F 0 "C?" H 3515 3446 50  0000 L CNN
@@ -76,7 +76,7 @@ F 3 "~" H 3400 3400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0C6BE
 P 3100 3400
 F 0 "C?" H 3215 3446 50  0000 L CNN
@@ -110,7 +110,7 @@ Wire Wire Line
 	3850 3400 3850 3550
 Connection ~ 3650 3550
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CB0C9B7
 P 2400 2750
 F 0 "R?" V 2193 2750 50  0000 C CNN
@@ -121,7 +121,7 @@ F 3 "~" H 2400 2750 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0CA1E
 P 2250 2900
 F 0 "C?" H 2365 2946 50  0000 L CNN
@@ -132,7 +132,7 @@ F 3 "~" H 2250 2900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CB0CB56
 P 2700 3100
 F 0 "R?" V 2493 3100 50  0000 C CNN
@@ -143,7 +143,7 @@ F 3 "~" H 2700 3100 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0CBA8
 P 2550 3250
 F 0 "C?" H 2665 3296 50  0000 L CNN
@@ -188,7 +188,7 @@ DAC_OUT_R
 Text Label 2250 2750 2    50   ~ 0
 DAC_OUT_L
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0D1C2
 P 3100 2700
 F 0 "C?" H 3215 2746 50  0000 L CNN
@@ -199,7 +199,7 @@ F 3 "~" H 3100 2700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0D208
 P 3100 2350
 F 0 "C?" H 3215 2396 50  0000 L CNN
@@ -210,7 +210,7 @@ F 3 "~" H 3100 2350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0D238
 P 3400 2350
 F 0 "C?" H 3515 2396 50  0000 L CNN
@@ -243,7 +243,7 @@ Wire Wire Line
 	3600 2700 4000 2700
 Connection ~ 3400 2550
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0E05A
 P 3650 2650
 F 0 "C?" H 3765 2696 50  0000 L CNN
@@ -294,7 +294,7 @@ $EndComp
 Wire Wire Line
 	3100 2900 4000 2900
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0F338
 P 5450 2250
 F 0 "C?" H 5565 2296 50  0000 L CNN
@@ -305,7 +305,7 @@ F 3 "~" H 5450 2250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0F3AE
 P 5850 2250
 F 0 "C?" H 5965 2296 50  0000 L CNN
@@ -316,7 +316,7 @@ F 3 "~" H 5850 2250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0F3E4
 P 5450 2600
 F 0 "C?" H 5565 2646 50  0000 L CNN
@@ -327,7 +327,7 @@ F 3 "~" H 5450 2600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CB0F42C
 P 5850 2600
 F 0 "C?" H 5965 2646 50  0000 L CNN
@@ -421,7 +421,7 @@ Wire Wire Line
 Wire Wire Line
 	5450 3300 5000 3300
 $Comp
-L Amplifier_Operational:TL072 U?
+L pcb-rescue:TL072-Amplifier_Operational U?
 U 1 1 5CB17A70
 P 5300 4450
 F 0 "U?" H 5300 4817 50  0000 C CNN
@@ -432,7 +432,7 @@ F 3 "http://www.ti.com/lit/ds/symlink/tl071.pdf" H 5300 4450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Amplifier_Operational:TL072 U?
+L pcb-rescue:TL072-Amplifier_Operational U?
 U 2 1 5CB17B0F
 P 5300 5950
 F 0 "U?" H 5300 6317 50  0000 C CNN
@@ -443,7 +443,7 @@ F 3 "http://www.ti.com/lit/ds/symlink/tl071.pdf" H 5300 5950 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Amplifier_Operational:TL072 U?
+L pcb-rescue:TL072-Amplifier_Operational U?
 U 3 1 5CB17BAB
 P 6900 4450
 F 0 "U?" H 6858 4496 50  0000 L CNN
@@ -456,7 +456,7 @@ $EndComp
 Text Label 4650 4350 2    50   ~ 0
 DAC_OUT_L
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CB17EF0
 P 5300 4850
 F 0 "R?" V 5093 4850 50  0000 C CNN
@@ -467,7 +467,7 @@ F 3 "~" H 5300 4850 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CB17F86
 P 4850 5000
 F 0 "R?" H 4780 4954 50  0000 R CNN
@@ -507,7 +507,7 @@ Wire Wire Line
 	5700 4450 5900 4450
 Connection ~ 5700 4450
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CB1D896
 P 5300 6350
 F 0 "R?" V 5093 6350 50  0000 C CNN
@@ -518,7 +518,7 @@ F 3 "~" H 5300 6350 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CB1D926
 P 4850 6500
 F 0 "R?" H 4780 6454 50  0000 R CNN
@@ -564,7 +564,7 @@ OUT_L
 Text Label 5900 5950 0    50   ~ 0
 OUT_R
 $Comp
-L Regulator_Linear:L78L12_SOT89 U?
+L pcb-rescue:L78L12_SOT89-Regulator_Linear U?
 U 1 1 5CB245C2
 P 7950 1550
 F 0 "U?" H 7950 1792 50  0000 C CNN
@@ -575,7 +575,7 @@ F 3 "http://www.st.com/content/ccc/resource/technical/document/datasheet/15/55/e
 	1    0    0    -1  
 $EndComp
 $Comp
-L Regulator_Linear:L79L12_SOT89 U?
+L pcb-rescue:L79L12_SOT89-Regulator_Linear U?
 U 1 1 5CB247DA
 P 7950 2550
 F 0 "U?" H 7950 2400 50  0000 C CNN

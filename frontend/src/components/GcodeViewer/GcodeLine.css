@@ -1,0 +1,41 @@
+.gcodeLine {
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.gcodeLine > span:first-child {
+  display: inline-block;
+  color: #8290a0;
+  width: 40px;
+  text-align: center;
+  margin-right: 5px;
+  background-color: #eee;
+}
+
+.gcodeLine > span:not(:first-child) {
+  padding-right: 10px;
+}
+
+.gcodeLine .G {
+  color: #3e009a;
+}
+
+.gcodeLine .M {
+  color: #f3628c;
+}
+
+.gcodeLine .X span:first-child, .gcodeLine .Y span:first-child, .gcodeLine .Z span:first-child , .gcodeLine .E span:first-child {
+  color: #d7901d;
+}
+
+.gcodeLine .X, .gcodeLine .Y, .gcodeLine .Z, .gcodeLine .E {
+  color: #f24e59;
+}
+.gcodeLine .F, .gcodeLine .S {
+  color: #999;
+}

@@ -1,43 +1,127 @@
-
-#include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "sdkconfig.h"
+#include "esp_wifi.h"
+#include "esp_system.h"
+#include "esp_event.h"
+#include "esp_event_loop.h"
+#include "nvs_flash.h"
+#include "esp_spiffs.h"
+#include "esp_log.h"
 
+
+#include "motion.h"
 #include "gcode.h"
 #include "planner.h"
 #include "motion.h"
+#include "web.h"
+#include "settings.h"
+#include "sd_card.h"
 
+#include <string.h>
 
-void motion_test(void *pvParameter)
+static esp_err_t event_handler(void *ctx, system_event_t *event)
 {
-  esp_timer_init();
-  global_init();
-  planner_init();
-  motion_init();
+  switch(event->event_id) {
+  case SYSTEM_EVENT_STA_GOT_IP:
+    ESP_LOGI("WIFI", "WiFi Connected");
+    break;
+  case SYSTEM_EVENT_STA_DISCONNECTED:
+    ESP_LOGI("WIFI", "WiFi Disconnected");
 
-  while(true){
-    int64_t start = esp_timer_get_time();
+    esp_wifi_connect();
+    break;
+  default:
+    break;
+  }
+  return ESP_OK;
+}
 
-    gcode_parse_text("G1 X10 Y10 F1000", 16);
+static void nvs_init(){
+  esp_err_t err = nvs_flash_init();
 
-
-    int64_t delta_time = esp_timer_get_time() - start;
-
-    printf("t_plan=%lld\n", delta_time);
-
-    vTaskDelay(10000 / portTICK_PERIOD_MS);
+  if (err != ESP_OK) {
+    // NVS partition has an issue
+    ESP_ERROR_CHECK(nvs_flash_erase());
+    ESP_ERROR_CHECK(nvs_flash_init());
   }
 }
 
-void app_main()
-{
-  xTaskCreate(&motion_test, "motion_test", 4096, NULL, 5, NULL);
+static void init_spiffs(){
+  printf("Initializing SPIFFS\n");
+
+  esp_vfs_spiffs_conf_t conf = {
+    .base_path = "/spiffs",
+    .partition_label = NULL,
+    .max_files = 5,
+    .format_if_mount_failed = false
+  };
+
+  esp_err_t ret = esp_vfs_spiffs_register(&conf);
+
+  if (ret != ESP_OK) {
+    if (ret == ESP_FAIL) {
+      printf("Failed to mount or format filesystem\n");
+    } else if (ret == ESP_ERR_NOT_FOUND) {
+      printf("Failed to find SPIFFS partition\n");
+    } else {
+      printf("Failed to initialize SPIFFS\n");
+    }
+    //return;
+  }
+
+  if(esp_spiffs_mounted(NULL)){
+    printf("SPIFFS is mounted\n");
+  } else {
+    printf("SPIFFS isn't mounted\n");
+  }
 }
 
+static void start_wifi(){
+  ESP_ERROR_CHECK( esp_event_loop_init(event_handler, NULL) );
+  wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+  ESP_ERROR_CHECK( esp_wifi_init(&cfg) );
+  ESP_ERROR_CHECK( esp_wifi_set_storage(WIFI_STORAGE_RAM) );
+  ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_STA) );
+  wifi_config_t sta_config = {
+    .sta = {
+      .ssid = "WiFi",
+      .password = "SpasticSeagull",
+      .bssid_set = false
+    }
+  };
+  ESP_ERROR_CHECK( esp_wifi_set_config(WIFI_IF_STA, &sta_config) );
+  ESP_ERROR_CHECK( esp_wifi_start() );
+  ESP_ERROR_CHECK( esp_wifi_connect() );
+}
 
-// 500 blocks done in time=7920046, ticks=825762
-// 1000 blocks done in time=7940069, ticks=830141
-// 2000 blocks done in time=7990045, ticks=833211
-// 
+void app_main(void)
+{
+  nvs_init();
+  tcpip_adapter_init();
+  esp_timer_init();
+
+  global_init();
+  settings_fetch_all();
+
+  planner_init();
+  motion_init();
+  sd_card_init();
+  web_init();
+
+  start_wifi();
+/*
+    vTaskDelay(10000 / portTICK_PERIOD_MS);
+
+  float distances[N_AXIS] = {100.0, 100.0, 100.0, 0, 0, 0, 0, 0, 0};
+
+  for(int i = 0; i < 1; i++)
+    add_motion_block(distances, 10);
+
+*/
+  while(1){
+    printf("Free memory: %d bytes\n", system_get_free_heap_size());
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+  };
+
+}

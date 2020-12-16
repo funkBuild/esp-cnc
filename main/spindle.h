@@ -10,16 +10,7 @@ typedef enum SpindleOutputType {PWM, Analog} SpindleOutputType;
 
 typedef struct spindle_context_t {
   unsigned int idx;
-
-  SpindleOutputType output_type;
-  unsigned int analog_channel_idx;
-
-  bool enabled;
-  bool dynamic_power;
-  unsigned int frequency;
-  unsigned int max_speed;
-  unsigned int speed;
-  
+ 
   // private
   unsigned int count;
   unsigned int threshold;
@@ -31,6 +22,18 @@ typedef struct spindle_context_t {
   float segment_power_delta;
 } spindle_context_t;
 
+typedef struct spindle_config_t {
+  SpindleOutputType output_type;
+  unsigned int analog_channel_idx;
+
+  bool enabled;
+  bool dynamic_power;
+  unsigned int frequency;
+  unsigned int max_speed;
+  unsigned int speed;
+} spindle_config_t;
+
+extern spindle_config_t spindle_config[N_SPINDLES];
 
 void spindle_init();
 void spindle_motion_setup(motion_ctx_t *motion_ctx);

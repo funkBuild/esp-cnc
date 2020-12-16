@@ -9,8 +9,6 @@ typedef struct analog_motion_ctx_t analog_motion_ctx_t;
 
 typedef struct galvanometer_context_t {
   unsigned int idx;
-  Axis axis;
-  bool enabled;
 
   float acceleration;
   float velocity;
@@ -23,5 +21,12 @@ typedef struct galvanometer_context_t {
   int int_velocity;
 } galvanometer_context_t;
 
+typedef struct galvanometer_config_t {
+  Axis axis;
+  bool enabled;
+  float width;
+} galvanometer_config_t;
+
+extern galvanometer_config_t galvanometer_config[N_GALVANOMETERS];
+
 void galvanometer_analog_setup(analog_motion_ctx_t *motion_ctx);
-void galvanometer_init();

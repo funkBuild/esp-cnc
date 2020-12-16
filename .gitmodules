@@ -1,0 +1,3 @@
+[submodule "components/esphttpd"]
+	path = components/esphttpd
+	url = https://github.com/funkBuild/esphttpd.git

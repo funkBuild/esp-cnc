@@ -1,6 +1,6 @@
 EESchema Schematic File Version 4
 LIBS:pcb-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -15,7 +15,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L ESP32-footprints-Shem-Lib:ESP32-WROOM U?
+L pcb-rescue:ESP32-WROOM-ESP32-footprints-Shem-Lib U?
 U 1 1 5CA8B052
 P 6700 2150
 F 0 "U?" H 6675 3537 60  0000 C CNN
@@ -46,7 +46,7 @@ Connection ~ 7750 2800
 Wire Wire Line
 	7750 2800 7750 2700
 $Comp
-L Regulator_Linear:NCP1117-3.3_SOT223 U?
+L pcb-rescue:NCP1117-3.3_SOT223-Regulator_Linear U?
 U 1 1 5CA9D870
 P 2650 1550
 F 0 "U?" H 2650 1792 50  0000 C CNN
@@ -90,7 +90,7 @@ F 3 "" H 3350 1550 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CA9DB7C
 P 2100 1850
 F 0 "C?" H 2215 1896 50  0000 L CNN
@@ -101,7 +101,7 @@ F 3 "~" H 2100 1850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CA9DBE7
 P 3150 1800
 F 0 "C?" H 3265 1846 50  0000 L CNN
@@ -112,7 +112,7 @@ F 3 "~" H 3150 1800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CA9DC48
 P 1700 1800
 F 0 "R?" H 1770 1846 50  0000 L CNN
@@ -123,7 +123,7 @@ F 3 "~" H 1700 1800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:LED D?
+L pcb-rescue:LED-Device D?
 U 1 1 5CA9DCCE
 P 1700 2100
 F 0 "D?" V 1738 1983 50  0000 R CNN
@@ -195,7 +195,7 @@ F 3 "" H 4750 1550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CA9E1B5
 P 4450 1700
 F 0 "C?" H 4565 1746 50  0000 L CNN
@@ -206,7 +206,7 @@ F 3 "~" H 4450 1700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CA9E1E3
 P 5050 1700
 F 0 "C?" H 5165 1746 50  0000 L CNN
@@ -250,7 +250,7 @@ F 3 "" H 6150 3250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CA9EA2B
 P 1800 3600
 F 0 "R?" H 1870 3646 50  0000 L CNN
@@ -261,7 +261,7 @@ F 3 "~" H 1800 3600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CA9EA90
 P 1800 4050
 F 0 "C?" H 1915 4096 50  0000 L CNN
@@ -363,7 +363,7 @@ F 3 "" H 1450 6000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CAA03BC
 P 1450 6200
 F 0 "C?" H 1565 6246 50  0000 L CNN
@@ -374,7 +374,7 @@ F 3 "~" H 1450 6200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C C?
+L pcb-rescue:C-Device C?
 U 1 1 5CAA0420
 P 1100 6200
 F 0 "C?" H 1215 6246 50  0000 L CNN
@@ -401,7 +401,7 @@ Wire Wire Line
 Text Label 7050 3200 3    50   ~ 0
 SD_CMD
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CAA0FD7
 P 2600 5450
 F 0 "R?" H 2670 5496 50  0000 L CNN
@@ -419,7 +419,7 @@ Connection ~ 2600 5800
 Wire Wire Line
 	2600 5800 1950 5800
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CAA19B8
 P 2350 5450
 F 0 "R?" H 2420 5496 50  0000 L CNN
@@ -437,7 +437,7 @@ Wire Wire Line
 	2350 5900 1950 5900
 Connection ~ 2350 5900
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CAA261C
 P 2100 5450
 F 0 "R?" H 2170 5496 50  0000 L CNN
@@ -455,7 +455,7 @@ Wire Wire Line
 	2100 6000 2650 6000
 Connection ~ 2100 6000
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CAA3397
 P 2600 6700
 F 0 "R?" H 2670 6746 50  0000 L CNN
@@ -466,7 +466,7 @@ F 3 "~" H 2600 6700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CAA3415
 P 2350 6700
 F 0 "R?" H 2420 6746 50  0000 L CNN
@@ -477,7 +477,7 @@ F 3 "~" H 2350 6700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R R?
+L pcb-rescue:R-Device R?
 U 1 1 5CAA344F
 P 2100 6700
 F 0 "R?" H 2170 6746 50  0000 L CNN
@@ -642,7 +642,7 @@ F 3 "" H 5450 6300 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L Device:D D?
+L pcb-rescue:D-Device D?
 U 1 1 5CAC0372
 P 5600 6300
 F 0 "D?" H 5600 6516 50  0000 C CNN
@@ -748,4 +748,17 @@ U 5CB0BACC
 F0 "I2S DAC" 50
 F1 "DAC.sch" 50
 $EndSheet
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5E0AC552
+P 9150 4850
+F 0 "#PWR?" H 9150 4700 50  0001 C CNN
+F 1 "+3.3V" H 9165 5023 50  0000 C CNN
+F 2 "" H 9150 4850 50  0001 C CNN
+F 3 "" H 9150 4850 50  0001 C CNN
+	1    9150 4850
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	9350 4850 9150 4850
 $EndSCHEMATC
